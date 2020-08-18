@@ -66,12 +66,14 @@ namespace PsefApiFile.Controllers
             }
 
             string userId = ApiHelper.GetUserId(HttpContext.User);
-            string currentDate = DateTime.Today.ToString(CultureInfo.InvariantCulture);
+            string currentDate = DateTime.Today.ToString(
+                "yyyy-MM-dd",
+                DateTimeFormatInfo.InvariantInfo);
             string folderPath = Path.Combine(
                 _environment.WebRootPath,
                 "upload",
-                currentDate,
-                userId);
+                userId,
+                currentDate);
 
             if (!Directory.Exists(folderPath))
             {
