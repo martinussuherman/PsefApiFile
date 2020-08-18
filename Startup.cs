@@ -1,14 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
@@ -88,13 +84,8 @@ namespace PsefApiFile
                 }
             };
 
-            // services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-
             services.AddSwaggerGen(options =>
             {
-                // add a custom operation filter which sets default values
-                // options.OperationFilter<SwaggerDefaultValues>();
-
                 // integrate xml comments
                 // options.IncludeXmlComments(XmlCommentsFilePath);
 
