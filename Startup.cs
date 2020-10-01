@@ -95,6 +95,7 @@ namespace PsefApiFile
                 // c.IncludeXmlComments(xmlPath);
 
                 // Define the OAuth2.0 scheme that's in use (i.e. Implicit Flow)
+                options.OperationFilter<AuthorizeCheckOperationFilter>();
                 options.AddSecurityDefinition(
                     ApiInfo.SchemeOauth2,
                     new OpenApiSecurityScheme
