@@ -57,6 +57,7 @@ namespace PsefApiFile
                 {
                     options.OAuthClientId(Configuration.GetValue<string>("ClientId"));
                     options.OAuthAppName("PsefApiFile Swagger");
+                    options.OAuthUsePkce();
                     options.SwaggerEndpoint(
                         $"{basePath}/swagger/v1/swagger.json",
                         "Psef File API V1");
@@ -74,10 +75,10 @@ namespace PsefApiFile
 
         private void ConfigureSwaggerGen(IServiceCollection services)
         {
-            var authUrl = new Uri($"{ApiHelper.Authority}/connect/authorize");
-            var implicitFlow = new OpenApiOAuthFlow
+            var authCodeFlow = new OpenApiOAuthFlow
             {
-                AuthorizationUrl = authUrl,
+                AuthorizationUrl = new Uri($"{ApiHelper.Authority}/connect/authorize"),
+                TokenUrl = new Uri($"{ApiHelper.Authority}/connect/token"),
                 Scopes = new Dictionary<string, string>
                 {
                     { ApiHelper.Audience, "Api access" }
@@ -103,7 +104,7 @@ namespace PsefApiFile
                         Type = SecuritySchemeType.OAuth2,
                         Flows = new OpenApiOAuthFlows
                         {
-                            Implicit = implicitFlow
+                            AuthorizationCode = authCodeFlow
                         }
                     });
                 options.AddSecurityRequirement(
