@@ -1,6 +1,9 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -65,6 +68,13 @@ namespace PsefApiFile.Controllers
                 return string.Empty;
             }
 
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (string.IsNullOrEmpty(ext) || !_permittedExtensions.Contains(ext))
+            {
+                return string.Empty;
+            }
+
             string userId = ApiHelper.GetUserId(HttpContext.User);
             string currentDate = DateTime.Today.ToString(
                 "yyyy-MM-dd",
@@ -89,9 +99,11 @@ namespace PsefApiFile.Controllers
                 await file.CopyToAsync(stream);
             }
 
-            return Url.Content($"~/upload/{userId}/{currentDate}/{file.FileName}");
+            return Url.Content($"~/upload/{userId}/{currentDate}/{WebUtility.HtmlEncode(file.FileName)}");
         }
 
         private readonly IWebHostEnvironment _environment;
+        private readonly string[] _permittedExtensions = { ".pdf" };
+
     }
 }
