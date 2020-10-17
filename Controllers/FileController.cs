@@ -3,7 +3,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -57,6 +56,24 @@ namespace PsefApiFile.Controllers
             }
 
             return Created(string.Empty, uploaded);
+        }
+
+        [HttpDelete]
+        [Produces(JsonOutput)]
+        [ProducesResponseType(typeof(Uri), Status200OK)]
+        [ProducesResponseType(Status204NoContent)]
+        [ProducesResponseType(Status400BadRequest)]
+        public IActionResult Delete(string relativeUrl)
+        {
+            if (string.IsNullOrEmpty(relativeUrl) ||
+                !relativeUrl.Contains("upload/") ||
+                (string.IsNullOrEmpty(ApiHelper.GetUserRole(HttpContext.User)) &&
+                !relativeUrl.Contains(ApiHelper.GetUserId(HttpContext.User))))
+            {
+                return BadRequest();
+            }
+
+            return ApiHelper.DeleteFile(_environment, Request, relativeUrl);
         }
 
         private async Task<string> CopyUploadedFile(IFormFile file)
