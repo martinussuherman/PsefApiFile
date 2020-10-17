@@ -52,31 +52,5 @@ namespace PsefApiFile
             Authority = bearerConfiguration.GetValue<string>("Authority");
             Audience = bearerConfiguration.GetValue<string>("Audience");
         }
-
-        internal static IActionResult DeleteFile(
-            IWebHostEnvironment environment,
-            HttpRequest request,
-            string relativeUrl)
-        {
-            StringBuilder builder = new StringBuilder(relativeUrl);
-
-            builder
-                .Replace("../", string.Empty)
-                .Replace("./", string.Empty)
-                .Replace(request.PathBase.Value, string.Empty);
-
-            string cleanedUrl = builder.ToString();
-            string filePath = Path.Combine(
-                environment.WebRootPath,
-                Path.Combine(cleanedUrl.Split('/')));
-
-            if (!File.Exists(filePath))
-            {
-                return new BadRequestResult();
-            }
-
-            File.Delete(filePath);
-            return new OkObjectResult(cleanedUrl);
-        }
     }
 }
